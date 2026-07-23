@@ -398,12 +398,15 @@ button:hover{
 
         <p id="premioSeleccionado"></p>
 
-        <p>
-            El Informático Loco ha recibido tu solicitud.
-            Tu premio será entregado muy pronto.
-        </p>
+       <p id="mensajePopup">
+    	El Informático Loco ha recibido tu solicitud.
+   	 Tu premio será entregado muy pronto.
+	</p>
 
-        <p>🕰️ Gracias por usar tus Jumbitos 🕰️</p>
+	<p id="mensajeGracias">
+    🕰️ Gracias por usar tus Jumbitos 🕰️
+	</p>
+
 
         <button onclick="cerrarPopup()">
             Cerrar
@@ -436,7 +439,7 @@ if(jumbitos === null){
 function actualizarSaldo(){
 
     document.getElementById("saldoJumbitos").innerHTML =
-    "Jumbitos disponibles: " + jumbitos;
+    "🪙 Jumbitos disponibles: " + jumbitos;
 
     let elefantes = "";
 
@@ -466,16 +469,22 @@ function canjear(premio){
         costo = 3;
     }
 
-    if(jumbitos < costo){
+  if(jumbitos < costo){
 
-        document.getElementById("premioSeleccionado").innerHTML =
-        "<strong>❌ No tienes suficientes Jumbitos</strong><br><br>" +
-        "Necesitas " + costo + " Jumbito(s) para este premio.";
+    document.getElementById("premioSeleccionado").innerHTML =
+    "<strong>❌ No tienes suficientes Jumbitos</strong><br><br>" +
+    "Necesitas " + costo + " Jumbito(s) para este premio.";
 
-        document.getElementById("popup").style.display = "flex";
+    document.getElementById("mensajePopup").innerHTML =
+    "🐘 Sigue acumulando Jumbitos para obtener este premio.";
 
-        return;
-    }
+    document.getElementById("mensajeGracias").innerHTML =
+    "";
+
+    document.getElementById("popup").style.display = "flex";
+
+    return;
+}
 
     jumbitos -= costo;
 
@@ -502,6 +511,12 @@ function canjear(premio){
     .catch(function(error){
         console.log("Error EmailJS:", error);
     });
+
+	document.getElementById("mensajePopup").innerHTML =
+"El Informático Loco ha recibido tu solicitud. Tu premio será entregado muy pronto.";
+
+document.getElementById("mensajeGracias").innerHTML =
+"🕰️ Gracias por usar tus Jumbitos 🕰️";
 
     document.getElementById("premioSeleccionado").innerHTML =
     "<strong>Has elegido:</strong><br><br>" +
