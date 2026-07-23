@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>🐘 Canjea tus Jumbitos 🐘</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Georgia, serif;
+    background:linear-gradient(180deg,#f8f5ec,#dbe8f5);
+    color:#2c3e50;
+    overflow-x:hidden;
+}
+
+/* CARTAS FLOTANTES */
+
+.cartas-flotantes{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    overflow:hidden;
+    z-index:1;
+}
+
+.cartas-flotantes span{
+    position:absolute;
+    bottom:-100px;
+    font-size:35px;
+    opacity:0.12;
+    animation:subir 20s linear infinite;
+}
+
+.cartas-flotantes span:nth-child(1){
+    left:5%;
+    animation-delay:0s;
+}
+
+.cartas-flotantes span:nth-child(2){
+    left:18%;
+    animation-delay:5s;
+}
+
+.cartas-flotantes span:nth-child(3){
+    left:30%;
+    animation-delay:9s;
+}
+
+.cartas-flotantes span:nth-child(4){
+    left:45%;
+    animation-delay:2s;
+}
+
+.cartas-flotantes span:nth-child(5){
+    left:60%;
+    animation-delay:12s;
+}
+
+.cartas-flotantes span:nth-child(6){
+    left:75%;
+    animation-delay:7s;
+}
+
+.cartas-flotantes span:nth-child(7){
+    left:88%;
+    animation-delay:14s;
+}
+
+.cartas-flotantes span:nth-child(8){
+    left:95%;
+    animation-delay:3s;
+}
+
+@keyframes subir{
+
+    from{
+        transform:translateY(0) rotate(0deg);
+    }
+
+    to{
+        transform:translateY(-120vh) rotate(360deg);
+    }
+}
+
+/* CONEJO */
+
+.conejo{
+    position:fixed;
+    left:-150px;
+    bottom:30px;
+    font-size:42px;
+    z-index:2;
+    pointer-events:none;
+    animation:correrConejo 24s linear infinite;
+}
+
+@keyframes correrConejo{
+
+    0%{
+        left:-150px;
+    }
+
+    45%{
+        left:50%;
+    }
+
+    50%{
+        transform:scale(1.2);
+    }
+
+    100%{
+        left:110%;
+    }
+}
+
+/* HEADER */
+
+header{
+    text-align:center;
+    padding:45px 20px;
+    background:linear-gradient(135deg,#4c6a92,#6e8fb8);
+    color:white;
+    position:relative;
+    z-index:10;
+    box-shadow:0 4px 15px rgba(0,0,0,.2);
+}
+
+header h1{
+    margin:0;
+    font-size:2.6rem;
+}
+
+header p{
+    margin-top:10px;
+}
+
+/* GALERÍA */
+
+.galeria{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:25px;
+    padding:30px;
+    position:relative;
+    z-index:10;
+}
+
+/* TARJETAS */
+
+.tarjeta{
+    width:270px;
+    background:white;
+    border-radius:20px;
+    padding:20px;
+    text-align:center;
+    border:3px solid #d4af37;
+    box-shadow:0 6px 15px rgba(0,0,0,.15);
+    transition:all .3s ease;
+    position:relative;
+}
+
+.tarjeta:hover{
+    transform:translateY(-8px) scale(1.02);
+}
+
+.emoji{
+    font-size:60px;
+}
+
+.costo{
+    color:#d4af37;
+    font-weight:bold;
+    font-size:18px;
+}
+
+button{
+    background:#4c6a92;
+    color:white;
+    border:none;
+    padding:12px 20px;
+    border-radius:12px;
+    cursor:pointer;
+    transition:.3s;
+}
+
+button:hover{
+    background:#324d6d;
+}
+
+/* POPUP */
+
+.popup{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.6);
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+}
+
+.popup-content{
+    background:white;
+    width:350px;
+    max-width:90%;
+    padding:30px;
+    border-radius:25px;
+    border:4px solid #d4af37;
+    text-align:center;
+    animation:aparecer .3s ease;
+}
+
+@keyframes aparecer{
+
+    from{
+        transform:scale(.8);
+        opacity:0;
+    }
+
+    to{
+        transform:scale(1);
+        opacity:1;
+    }
+}
+
+.popup-content h2{
+    color:#4c6a92;
+    margin-top:0;
+}
+
+.popup-content button{
+    margin-top:10px;
+}
+
+.footer{
+    text-align:center;
+    padding:30px;
+    position:relative;
+    z-index:10;
+    opacity:.7;
+}
+
+#saldoJumbitos{
+    margin-top:15px;
+    color:#ffd700;
+    text-shadow:0 0 8px rgba(255,215,0,.5);
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="cartas-flotantes">
+    <span>♠</span>
+    <span>♥</span>
+    <span>♣</span>
+    <span>♦</span>
+    <span>♠</span>
+    <span>♥</span>
+    <span>♣</span>
+    <span>♦</span>
+</div>
+
+<div class="conejo">
+    🐇🕰️
+</div>
+
+<header>
+    <h1>🐘🎩 Tienda de Jumbitos 🎩🐘</h1>
+    <p>
+        ♠ Bienvenida al País de los Jumbitos ♥<br>
+        Escoge sabiamente tu recompensa 🐇🕰️
+    </p>
+
+<h2 id="saldoJumbitos">
+    🪙 Jumbitos disponibles: 7
+</h2>
+
+</header>
+
+<div class="galeria">
+
+    <div class="tarjeta">
+        <div class="emoji">🍫</div>
+        <h2>Ganas de algo dulce?</h2>
+        <p>Puedes pedir chocolates o cosas dulces para picar.</p>
+        <p class="costo">💰 1 Jumbito</p>
+        <button onclick="canjear('Dulces 🍫')">Canjear</button>
+    </div>
+
+    <div class="tarjeta">
+        <div class="emoji">🤗</div>
+        <h2>Abrazo Silencioso</h2>
+        <p>Un abrazo largo, sin decir una sola palabra.</p>
+        <p class="costo">💰 1 Jumbito</p>
+        <button onclick="canjear('Abrazo Silencioso 🤗')">Canjear</button>
+    </div>
+
+    <div class="tarjeta">
+        <div class="emoji">🧸</div>
+        <h2>Abrazo Gigante</h2>
+        <p>Abrazo premium con duración extendida y cariño ilimitado.</p>
+        <p class="costo">💰 1 Jumbito</p>
+        <button onclick="canjear('Abrazo Gigante 🧸')">Canjear</button>
+    </div>
+
+    <div class="tarjeta">
+        <div class="emoji">🥨</div>
+        <h2>Cositas Saladas</h2>
+        <p>Snacks, picoteo o alguna cosita rica para compartir.</p>
+        <p class="costo">💰 1 Jumbito</p>
+        <button onclick="canjear('Cositas Saladas 🥨')">Canjear</button>
+    </div>
+
+    <div class="tarjeta">
+        <div class="emoji">🍷</div>
+        <h2>¿Un Vinito?</h2>
+        <p>Una copa y buena conversación.</p>
+        <p class="costo">💰 1 Jumbito</p>
+        <button onclick="canjear('¿Un Vinito? 🍷')">Canjear</button>
+    </div>
+
+    <div class="tarjeta">
+        <div class="emoji">💆</div>
+        <h2>Masaje Relax</h2>
+        <p>30 minutos de relajación.</p>
+        <p class="costo">💰 1 Jumbito</p>
+        <button onclick="canjear('Masaje Relax 💆')">Canjear</button>
+    </div>
+
+    <div class="tarjeta">
+        <div class="emoji">😘</div>
+        <h2>Beso :$</h2>
+        <p>Canjeable en cualquier momento válido y con consentimiento mutuo.</p>
+        <p class="costo">💰 1 Jumbito</p>
+        <button onclick="canjear('Beso 😘')">Canjear</button>
+    </div>
+
+    <div class="tarjeta">
+        <div class="emoji">🍕</div>
+        <h2>Cena Especial</h2>
+        <p>Tú eliges dónde ir.</p>
+        <p class="costo">💰 2 Jumbitos</p>
+        <button onclick="canjear('Cena Especial 🍕')">Canjear</button>
+    </div>
+
+    <div class="tarjeta">
+        <div class="emoji">🎬</div>
+        <h2>Salida de Películas</h2>
+        <p>Cine & Snacks.</p>
+        <p class="costo">💰 2 Jumbitos</p>
+        <button onclick="canjear('Salida de Películas 🎬')">Canjear</button>
+    </div>
+
+    <div class="tarjeta">
+        <div class="emoji">🚗</div>
+        <h2>Paseo</h2>
+        <p>Destino: donde queramos.</p>
+        <p class="costo">💰 2 Jumbitos</p>
+        <button onclick="canjear('Paseito 🚗')">Canjear</button>
+    </div>
+
+    <div class="tarjeta">
+        <div class="emoji">🏖️</div>
+        <h2>Día de Playa</h2>
+        <p>Puede ser un día o una arrancada más larga.</p>
+        <p class="costo">💰 3 Jumbitos</p>
+        <button onclick="canjear('Día de Playa 🏖️')">Canjear</button>
+    </div>
+
+</div>
+
+<div id="popup" class="popup">
+
+    <div class="popup-content">
+
+        <h2>🐘✨ ¡Canje realizado! ✨🐘</h2>
+
+        <p id="premioSeleccionado"></p>
+
+        <p>
+            El Informático Loco ha recibido tu solicitud.
+            Tu premio será entregado muy pronto.
+        </p>
+
+        <p>🕰️ Gracias por usar tus Jumbitos 🕰️</p>
+
+        <button onclick="cerrarPopup()">
+            Cerrar
+        </button>
+
+    </div>
+
+</div>
+
+<div class="footer">
+    ♠ ♥ ♣ ♦ Bienvenida al País de los Jumbitos ♦ ♣ ♥ ♠
+</div>
+
+<script>
+
+let jumbitos = 7;
+
+function actualizarSaldo(){
+    document.getElementById("saldoJumbitos").innerHTML =
+    "💰 Jumbitos disponibles: " + jumbitos;
+}
+
+function canjear(premio){
+
+    let costo = 1;
+
+    if(
+        premio.includes("Cena Especial") ||
+        premio.includes("Películas") ||
+        premio.includes("Paseito")
+    ){
+        costo = 2;
+    }
+
+    if(
+        premio.includes("Día de Playa")
+    ){
+        costo = 3;
+    }
+
+    if(jumbitos < costo){
+
+        document.getElementById("premioSeleccionado").innerHTML =
+        "<strong>❌ No tienes suficientes Jumbitos</strong><br><br>" +
+        "Necesitas " + costo + " Jumbito(s) para este premio.";
+
+        document.getElementById("popup").style.display = "flex";
+        return;
+    }
+
+    jumbitos -= costo;
+
+    actualizarSaldo();
+
+    document.getElementById("premioSeleccionado").innerHTML =
+    "<strong>Has elegido:</strong><br><br>" +
+    premio +
+    "<br><br>" +
+    "💰 Coste: " + costo + " Jumbito(s)";
+
+    document.getElementById("popup").style.display = "flex";
+}
+
+function cerrarPopup(){
+    document.getElementById("popup").style.display = "none";
+}
+
+window.onclick = function(event){
+
+    let popup = document.getElementById("popup");
+
+    if(event.target === popup){
+        popup.style.display = "none";
+    }
+}
+
+window.onload = actualizarSaldo;
+
+</script>
+
+</body>
+</html>
