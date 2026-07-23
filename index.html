@@ -422,19 +422,65 @@ button:hover{
 
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
 <script>
 
 emailjs.init({
     publicKey: "C9k7C0jO5oztemLXQ"
 });
 
-let jumbitos = localStorage.getItem("jumbitos");
+/* =========================
+   JUMBITOS (VERSIÓN ESTABLE)
+========================= */
 
-if(jumbitos === null){
-    jumbitos = 7;
-}else{
-    jumbitos = parseInt(jumbitos);
+let jumbitos = 0;
+
+/* =========================
+   FIREBASE (SOLO PRUEBA)
+========================= */
+
+const firebaseConfig = {
+    apiKey: "AIzaSyBqbFM-v4v7gjdwZ3yQAe607KhBqCcyF_4",
+    authDomain: "tienda-jumbitos.firebaseapp.com",
+    projectId: "tienda-jumbitos",
+    storageBucket: "tienda-jumbitos.firebasestorage.app",
+    messagingSenderId: "613233722805",
+    appId: "1:613233722805:web:9bf3a4ab419a82488505fc"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const db = firebase.firestore();
+
+async function probarFirebase(){
+
+    try{
+
+        const doc = await db
+            .collection("configuracion")
+            .doc("saldo")
+            .get();
+
+        console.log(
+            "Firebase conectado:",
+            doc.data()
+        );
+
+    }catch(error){
+
+        console.error(
+            "Error Firebase:",
+            error
+        );
+    }
 }
+
+/* =========================
+   INTERFAZ
+========================= */
 
 function actualizarSaldo(){
 
@@ -451,7 +497,11 @@ function actualizarSaldo(){
     elefantes;
 }
 
-function canjear(premio){
+/* =========================
+   CANJES
+========================= */
+
+async function canjear(premio){
 
     let costo = 1;
 
@@ -469,29 +519,32 @@ function canjear(premio){
         costo = 3;
     }
 
-  if(jumbitos < costo){
+    if(jumbitos < costo){
 
-    document.getElementById("premioSeleccionado").innerHTML =
-    "<strong>❌ No tienes suficientes Jumbitos</strong><br><br>" +
-    "Necesitas " + costo + " Jumbito(s) para este premio.";
+        document.getElementById("premioSeleccionado").innerHTML =
+        "<strong>❌ No tienes suficientes Jumbitos</strong><br><br>" +
+        "Necesitas " + costo + " Jumbito(s) para este premio.";
 
-    document.getElementById("mensajePopup").innerHTML =
-    "🐘 Sigue acumulando Jumbitos para obtener este premio.";
+        document.getElementById("mensajePopup").innerHTML =
+        "🐘 Sigue acumulando Jumbitos para obtener este premio.";
 
-    document.getElementById("mensajeGracias").innerHTML =
-    "";
+        document.getElementById("mensajeGracias").innerHTML =
+        "";
 
-    document.getElementById("popup").style.display = "flex";
+        document.getElementById("popup").style.display =
+        "flex";
 
-    return;
-}
+        return;
+    }
 
     jumbitos -= costo;
 
-    localStorage.setItem(
-        "jumbitos",
-        jumbitos
-    );
+    await db
+    .collection("configuracion")
+    .doc("saldo")
+    .update({
+        jumbitos: jumbitos
+    });
 
     actualizarSaldo();
 
@@ -512,11 +565,11 @@ function canjear(premio){
         console.log("Error EmailJS:", error);
     });
 
-	document.getElementById("mensajePopup").innerHTML =
-"El Informático Loco ha recibido tu solicitud. Tu premio será entregado muy pronto.";
+    document.getElementById("mensajePopup").innerHTML =
+    "El Informático Loco ha recibido tu solicitud. Tu premio será entregado muy pronto.";
 
-document.getElementById("mensajeGracias").innerHTML =
-"🕰️ Gracias por usar tus Jumbitos 🕰️";
+    document.getElementById("mensajeGracias").innerHTML =
+    "🕰️ Gracias por usar tus Jumbitos 🕰️";
 
     document.getElementById("premioSeleccionado").innerHTML =
     "<strong>Has elegido:</strong><br><br>" +
@@ -524,8 +577,13 @@ document.getElementById("mensajeGracias").innerHTML =
     "<br><br>" +
     "💰 Coste: " + costo + " Jumbito(s)";
 
-    document.getElementById("popup").style.display = "flex";
+    document.getElementById("popup").style.display =
+    "flex";
 }
+
+/* =========================
+   POPUP
+========================= */
 
 function cerrarPopup(){
 
@@ -541,9 +599,51 @@ window.onclick = function(event){
     if(event.target === popup){
         popup.style.display = "none";
     }
+};
+
+/* =========================
+   INICIO
+========================= */
+
+window.addEventListener("load", function(){
+
+    probarFirebase();
+
+    cargarSaldoFirebase();
+
+});
+
+async function cargarSaldoFirebase(){
+
+    try{
+
+        const doc = await db
+            .collection("configuracion")
+            .doc("saldo")
+            .get();
+
+        if(doc.exists){
+
+            jumbitos = doc.data().jumbitos;
+
+            actualizarSaldo();
+
+            console.log(
+                "Saldo cargado desde Firebase:",
+                jumbitos
+            );
+        }
+
+    }catch(error){
+
+        console.error(
+            "Error cargando saldo:",
+            error
+        );
+    }
 }
 
-window.onload = actualizarSaldo;
+console.log("Script cargado");
 
 </script>
 </body>
