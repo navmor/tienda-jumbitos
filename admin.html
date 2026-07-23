@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Administrador de Jumbitos</title>
+
+<style>
+
+body{
+    font-family:Arial,sans-serif;
+    background:#f4f4f4;
+    text-align:center;
+    padding:40px;
+}
+
+h1{
+    color:#4c6a92;
+}
+
+#saldo{
+    font-size:30px;
+    margin:20px;
+}
+
+button{
+    padding:15px 25px;
+    margin:10px;
+    font-size:18px;
+    border:none;
+    border-radius:12px;
+    cursor:pointer;
+    background:#4c6a92;
+    color:white;
+}
+
+button:hover{
+    background:#324d6d;
+}
+
+</style>
+
+</head>
+<body>
+
+<h1>🐘 Administrador de Jumbitos 🐘</h1>
+
+<div id="saldo">Cargando...</div>
+
+<button onclick="agregar(1)">➕ +1</button>
+<button onclick="agregar(5)">➕ +5</button>
+<button onclick="agregar(10)">➕ +10</button>
+<button onclick="resetear()">🔄 Reset 7</button>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<script>
+
+const firebaseConfig = {
+    apiKey: "AIzaSyBqbFM-v4v7gjdwZ3yQAe607KhBqCcyF_4",
+    authDomain: "tienda-jumbitos.firebaseapp.com",
+    projectId: "tienda-jumbitos",
+    storageBucket: "tienda-jumbitos.firebasestorage.app",
+    messagingSenderId: "613233722805",
+    appId: "1:613233722805:web:9bf3a4ab419a82488505fc"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const db = firebase.firestore();
+
+async function cargarSaldo(){
+
+    const doc = await db
+        .collection("configuracion")
+        .doc("saldo")
+        .get();
+
+    const saldo = doc.data().jumbitos;
+
+    document.getElementById("saldo").innerHTML =
+        "🪙 Jumbitos: " + saldo;
+}
+
+async function agregar(cantidad){
+
+    const ref = db
+        .collection("configuracion")
+        .doc("saldo");
+
+    const doc = await ref.get();
+
+    const actual = doc.data().jumbitos;
+
+    await ref.update({
+        jumbitos: actual + cantidad
+    });
+
+    cargarSaldo();
+}
+
+async function resetear(){
+
+    await db
+        .collection("configuracion")
+        .doc("saldo")
+        .update({
+            jumbitos: 7
+        });
+
+    cargarSaldo();
+}
+
+window.onload = cargarSaldo;
+
+</script>
+
+</body>
+</html>
