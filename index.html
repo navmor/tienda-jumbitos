@@ -255,6 +255,13 @@ button:hover{
     text-shadow:0 0 8px rgba(255,215,0,.5);
 }
 
+#elefantes{
+    margin-top:10px;
+    font-size:28px;
+    letter-spacing:4px;
+}
+
+
 </style>
 </head>
 
@@ -285,6 +292,9 @@ button:hover{
 <h2 id="saldoJumbitos">
     🪙 Jumbitos disponibles: 7
 </h2>
+
+<div id="elefantes"></div>
+
 
 </header>
 
@@ -407,13 +417,35 @@ button:hover{
     ♠ ♥ ♣ ♦ Bienvenida al País de los Jumbitos ♦ ♣ ♥ ♠
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
 <script>
 
-let jumbitos = 7;
+emailjs.init({
+    publicKey: "C9k7C0jO5oztemLXQ"
+});
+
+let jumbitos = localStorage.getItem("jumbitos");
+
+if(jumbitos === null){
+    jumbitos = 7;
+}else{
+    jumbitos = parseInt(jumbitos);
+}
 
 function actualizarSaldo(){
+
     document.getElementById("saldoJumbitos").innerHTML =
-    "💰 Jumbitos disponibles: " + jumbitos;
+    "🪙 Jumbitos disponibles: " + jumbitos;
+
+    let elefantes = "";
+
+    for(let i = 0; i < jumbitos; i++){
+        elefantes += "🐘";
+    }
+
+    document.getElementById("elefantes").innerHTML =
+    elefantes;
 }
 
 function canjear(premio){
@@ -441,12 +473,35 @@ function canjear(premio){
         "Necesitas " + costo + " Jumbito(s) para este premio.";
 
         document.getElementById("popup").style.display = "flex";
+
         return;
     }
 
     jumbitos -= costo;
 
+    localStorage.setItem(
+        "jumbitos",
+        jumbitos
+    );
+
     actualizarSaldo();
+
+    emailjs.send(
+        "service_e0jdl1q",
+        "template_nwglx72",
+        {
+            premio: premio,
+            costo: costo,
+            saldo: jumbitos,
+            fecha: new Date().toLocaleString("es-CL")
+        }
+    )
+    .then(function(){
+        console.log("Correo enviado");
+    })
+    .catch(function(error){
+        console.log("Error EmailJS:", error);
+    });
 
     document.getElementById("premioSeleccionado").innerHTML =
     "<strong>Has elegido:</strong><br><br>" +
@@ -458,12 +513,15 @@ function canjear(premio){
 }
 
 function cerrarPopup(){
-    document.getElementById("popup").style.display = "none";
+
+    document.getElementById("popup").style.display =
+    "none";
 }
 
 window.onclick = function(event){
 
-    let popup = document.getElementById("popup");
+    let popup =
+    document.getElementById("popup");
 
     if(event.target === popup){
         popup.style.display = "none";
@@ -473,6 +531,5 @@ window.onclick = function(event){
 window.onload = actualizarSaldo;
 
 </script>
-
 </body>
 </html>
